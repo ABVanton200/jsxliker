@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>ReactLearn2</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>  <!-- подключить транспайлер -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.production.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom.production.min.js"></script>
+ </head>
+ <body>
+    <div class="cont"></div>
+    <script type="text/babel">
+    	class Frameworks extends React.Component {
+        	constructor(props) {
+    	  		super();  
+                this.state = {frameworks: []};
+                this.plus = this.plus.bind(this);
+                this.minus = this.minus.bind(this);
+  			}	
+            
+            plus(e) {
+            	const { frameworks } = this.state,
+                	id = e.target.getAttribute("iden");
+          		frameworks[id].votes += 1;
+          		this.setState({ frameworks });
+        	}
+            
+            minus(e) {
+            	const { frameworks } = this.state,
+                	id = e.target.getAttribute("iden");
+          		frameworks[id].votes -= 1;
+                frameworks[id].votes = frameworks[id].votes < 0 ? 0 : frameworks[id].votes;
+          		this.setState({ frameworks });
+        	}
+            
+        	async componentDidMount() {
+            
+            	let frameworks = await fetch("https://kodaktor.ru/j/react5b_6cbf2").then(x => x.json());                
+                this.setState({ frameworks });
+            }
+            
+            render(){            
+            
+            	return this.state.frameworks.map((el, num) => {                
+                	return <div><b>{el.title}</b><StarString key={num} length={el.votes} /><button iden={el.id} onClick={this.minus}>-</button><button iden={el.id} onClick={this.plus}>+</button></div>;
+            	});
+                
+            }            
+            
+        }
+        
+      	const StarString = ({length}) => Array.from({length}).map(() => "⭐️");
+
+      
+      ReactDOM.render(
+        <div>
+              <Frameworks />   
+        </div>,
+        document.querySelector('.cont')
+      );
+
+    </script>    
+     
+    <hr>
+
+    <h4 title="GossJS" id="author">Антон Бабахин</h4>
+    
+ </body>
+</html>
